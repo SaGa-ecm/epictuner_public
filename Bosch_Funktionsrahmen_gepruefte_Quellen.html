@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bosch Funktionsrahmen — Recherchebibliothek</title>
+<style>
+  :root{color-scheme:light;--bg:#fff;--ink:#111;--muted:#555;--line:#ccc;--soft:#f4f4f4}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  a{color:inherit;text-underline-offset:4px}
+  button,input,select{font:inherit}
+  button,a,input,select,summary{touch-action:manipulation}
+  :focus-visible{outline:3px solid #111;outline-offset:4px}
+  .wrap{max-width:1280px;margin:auto;padding:0 32px}
+  .top{border-bottom:1px solid #111}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:17px;padding-bottom:17px}
+  .brand{font-weight:850;letter-spacing:.12em;font-size:12px}
+  .stamp{font:11px/1.5 ui-monospace,monospace;text-align:right}
+  .hero{padding:55px 0 30px}
+  .eyebrow{text-transform:uppercase;letter-spacing:.16em;font:11px/1.6 ui-monospace,monospace}
+  h1{font-size:clamp(39px,6.8vw,82px);line-height:1.02;letter-spacing:-.065em;margin:17px 0 23px;font-weight:800}
+  .intro{max-width:770px;font-size:17px;color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #111;margin:30px 0 24px}
+  .stat{padding:20px;border-right:1px solid #111}
+  .stat:last-child{border:0}
+  .stat strong{font-size:32px;display:block;letter-spacing:-.05em;line-height:1.2}
+  .stat span{font-size:12px;color:var(--muted)}
+  .notice{padding:19px 22px;background:#111;color:white;display:grid;grid-template-columns:140px 1fr;gap:20px}
+  .notice strong{font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+  .notice p{margin:0;font-size:14px}
+  .toolbar{padding:28px 0 22px;border-bottom:1px solid #111}
+  .inputs{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px}
+  label.field{display:grid;gap:6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+  input[type=search],select{width:100%;min-width:0;padding:12px;border:1px solid #111;border-radius:0;background:#fff;color:#111;font-size:14px;text-transform:none;letter-spacing:normal}
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:17px;flex-wrap:wrap}
+  .toggle{display:flex;align-items:center;gap:9px;font-size:13px}
+  input[type=checkbox]{width:18px;height:18px;accent-color:#111}
+  button,.linkbtn{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:42px;padding:9px 14px;border:1px solid #111;background:#fff;color:#111;text-decoration:none;cursor:pointer;font-size:12px;font-weight:650;border-radius:0}
+  button:hover,.linkbtn:hover{background:#eee}
+  .primary{background:#111;color:white}
+  .primary:hover{background:#333}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .resulthead{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:25px 0 18px}
+  .resulthead h2{margin:0;font-size:16px}
+  .resulthead span{font-size:12px;color:var(--muted)}
+  #cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  article{border:1px solid #bbb;padding:21px;display:flex;flex-direction:column;min-width:0}
+  article.featured{border:2px solid #111;padding:20px}
+  .cardtop{display:flex;justify-content:space-between;gap:10px;align-items:start}
+  .category{font:10px/1.5 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.12em}
+  .badge{border:1px solid #111;padding:2px 7px;font:10px/1.5 ui-monospace,monospace;white-space:nowrap}
+  .badge.solid{background:#111;color:#fff}
+  article h3{font-size:25px;line-height:1.15;letter-spacing:-.035em;margin:19px 0 8px}
+  .subtitle{font-size:13px;margin:0 0 15px;min-height:40px}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .meta span{padding:2px 7px;background:var(--soft);font:11px/1.6 ui-monospace,monospace}
+  .note{font-size:13px;color:#444;margin:0 0 18px}
+  .bottom{margin-top:auto}
+  .bottom .linkbtn{width:100%}
+  details{font-size:12px;border-top:1px solid var(--line);padding-top:12px;margin-top:15px}
+  summary{cursor:pointer;font-weight:650}
+  details p{margin:10px 0}
+  .url{display:block;overflow-wrap:anywhere;font:10px/1.7 ui-monospace,monospace;background:var(--soft);padding:10px;margin-top:9px;user-select:all}
+  .unconfirmed{background:#fafafa;border-style:dashed}
+  .disablednote{font-size:11px;border:1px dashed #777;padding:10px;text-align:center}
+  .empty{grid-column:1/-1;padding:40px;border:1px dashed #777;text-align:center}
+  .method{margin:45px 0 25px;border-top:2px solid #111;padding-top:24px;display:grid;grid-template-columns:1fr 2fr;gap:35px}
+  .method h2{font-size:27px;line-height:1.2;letter-spacing:-.04em;margin:0}
+  .method p{font-size:13px;margin:0 0 13px}
+  .method ul{font-size:13px;padding-left:18px}
+  .gapnote{border:1px solid #111;padding:18px;margin-top:18px}
+  footer{border-top:1px solid #111;padding:20px 0 35px;font:11px/1.6 ui-monospace,monospace;color:var(--muted)}
+  #message{font-size:12px;min-height:20px;margin-top:8px}
+  #copyFallback{width:100%;height:140px;font:11px/1.6 ui-monospace,monospace;padding:12px;border:1px solid #111}
+  [hidden]{display:none!important}
+  @media(min-width:1500px){.wrap{max-width:1400px}}
+  @media(max-width:1000px){#cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:640px){
+    .wrap{padding:0 18px}.top .wrap{padding:13px 18px}.stamp{font-size:9px}
+    .brand{font-size:10px}.hero{padding:32px 0 20px}.intro{font-size:15px}
+    .stats{grid-template-columns:1fr 1fr}.stat{padding:15px}
+    .stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid #111}
+    .stat strong{font-size:28px}.notice{grid-template-columns:1fr;gap:8px;padding:17px}
+    .inputs{grid-template-columns:1fr 1fr}.field:first-child{grid-column:1/-1}
+    #cards{grid-template-columns:1fr}.method{grid-template-columns:1fr;gap:18px}
+    .resulthead{align-items:start}.resulthead span{max-width:150px;text-align:right}
+    article .subtitle{min-height:0}.actions{width:100%}.actions button{flex:1}
+  }
+  @media print{
+    .toolbar,.actions,#message,#copyFallback{display:none!important}
+    #cards{display:block}article{break-inside:avoid;margin-bottom:14px}
+    .hero{padding:20px 0}h1{font-size:42px}.wrap{padding:0}
+    .linkbtn::after{content:" — " attr(href);overflow-wrap:anywhere;font-size:9px}
+    .notice{background:#fff;color:#111;border:1px solid #111}
+  }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand">TECHNISCHE RECHERCHE / BOSCH</div>
+      <div class="stamp">RUNDE 01 + 02<br>RECHERCHESTAND · 16.09.2026</div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Benzin · Diesel · Motorsport</div>
+      <h1>Funktionsrahmen.<br>Quellen statt Versprechen.</h1>
+      <p class="intro">Eine zusammengeführte Bibliothek für ältere und neuere Bosch-Motorsteuerungen. Mit direkt abgerufenen PDFs, erreichbaren Dokumentenseiten und einem transparenten Archiv der nicht bestätigten Treffer.</p>
+      <div class="stats">
+        <div class="stat"><strong id="pdfCount">7</strong><span>PDF-Ziele direkt abgerufen</span></div>
+        <div class="stat"><strong>1</strong><span>davon EDC17-Vorschau</span></div>
+        <div class="stat"><strong id="pageCount">5</strong><span>weitere Seiten abgerufen</span></div>
+        <div class="stat"><strong id="totalCount">—</strong><span>zusammengeführte Einträge</span></div>
+      </div>
+      <div class="notice">
+        <strong>ME7.5 geklärt</strong>
+        <p>Das Audi-R4-PDF bei S4Wiki nennt auf dem Deckblatt „System: SG ME7.5“ und zugleich im Projektnamen „ME7.1“. Es ist direkt abrufbar. Der zuvor genannte The07k-Link wurde dagegen erneut mit HTTP 403 abgewiesen und ist nicht als funktionierender Download freigegeben.</p>
+      </div>
+    </section>
+    <section class="toolbar" aria-label="Bibliothek filtern">
+      <div class="inputs">
+        <label class="field">Suchen
+          <input type="search" id="search" placeholder="ME7.5, EDC15, Englisch, P127 …" autocomplete="off">
+        </label>
+        <label class="field">Systembereich
+          <select id="category">
+            <option value="">Alle Bereiche</option>
+            <option>Benzin</option><option>Diesel</option><option>Motorsport</option><option>Gemischt</option>
+          </select>
+        </label>
+        <label class="field">Dokumenttyp
+          <select id="kind">
+            <option value="">Alle Dokumenttypen</option>
+            <option value="pdf">Direkte PDFs</option>
+            <option value="page">Seiten & Sammlungen</option>
+            <option value="other">Sonstige Dateien</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <label class="toggle"><input type="checkbox" id="archive">Nicht bestätigte Treffer mit anzeigen</label>
+        <div class="actions">
+          <button id="reset">Filter zurücksetzen</button>
+          <button id="copy" class="primary">Geprüfte sichtbare Links kopieren</button>
+          <button id="print">Drucken</button>
+        </div>
+      </div>
+      <div id="message" role="status" aria-live="polite"></div>
+      <textarea id="copyFallback" aria-label="Geprüfte Links zum manuellen Kopieren" readonly hidden></textarea>
+    </section>
+    <div class="resulthead">
+      <h2 id="resultCount" aria-live="polite"></h2>
+      <span>Nur erfolgreiche Abrufe erhalten aktive Links.</span>
+    </div>
+    <section id="cards" aria-label="Rechercheergebnisse"></section>
+    <noscript>Bitte JavaScript aktivieren, um die lokal eingebettete Bibliothek mit Suche und Filtern anzuzeigen.</noscript>
+    <section class="method">
+      <div><div class="eyebrow">Prüfung & Grenzen</div><h2>Was „geprüft“<br>hier bedeutet.</h2></div>
+      <div>
+        <p><strong>PDF abgerufen:</strong> Das direkte Ziel wurde in Runde 2 geöffnet und lieferte lesbaren PDF-Inhalt einschließlich Dokumentkopf. Das ist mehr als ein Suchtreffer oder ein Verzeichniseintrag. Es ist kein vollständiger Byte-für-Byte-Integritätstest aller Seiten.</p>
+        <p><strong>Seite abgerufen:</strong> Die HTML-Seite wurde in der angegebenen Runde erfolgreich gelesen. Bei einem Forum bedeutet dies ausdrücklich nicht, dass dessen Anhänge ohne Anmeldung herunterladbar sind. Bei ManualsLib ist die Dokumentansicht bestätigt, nicht der separate PDF-Downloadablauf.</p>
+        <p><strong>Archiv:</strong> Suchtreffer, nur im Verzeichnis gelistete Dateien, Zugriffsfehler und nicht geprüfte Downloadziele sind als Text erhalten. Sie sind keine freigegebenen Downloadlinks. Der Kopierknopf übernimmt ausschließlich erfolgreich abgerufene Ziele.</p>
+        <p><strong>Keine Live-Überwachung:</strong> Diese Seite zeigt den dokumentierten Recherchebefund. Sie behauptet nicht, beim Öffnen alle Server erneut zu prüfen. Erreichbarkeit kann sich ändern; Netzwerk, Region und Browser können das Ergebnis beeinflussen.</p>
+        <ul>
+          <li>Runde 2: erneute Direktabrufe sowie englische und russische Suchanfragen, ergänzend zu den deutschsprachigen Dokumenttiteln.</li>
+          <li>Seitenzahlen stammen aus den Dokumentköpfen bzw. der Dokumentansicht; Dateigrößen sind gerundete Verzeichnisangaben.</li>
+          <li>„Funktionsrahmen“ bedeutet nicht automatisch sämtliche Funktionen aller Softwarestände. Mehrere Deckblätter nennen ausdrücklich ausgewählte Blöcke; MED17.5 ist „in Bearbeitung“.</li>
+          <li>Öffentlich abrufbar ist keine Aussage über eine freie Lizenz oder eine vom Rechteinhaber autorisierte Weiterverbreitung. Fremdgehostete Bosch-Dokumente enthalten Rechtevorbehalte, teils Vertraulichkeitshinweise.</li>
+          <li>Keine Logins, Bezahlschranken oder Zugriffssperren wurden umgangen. Simos-Dokumente sind ausgeschlossen: Siemens/Continental, nicht Bosch.</li>
+        </ul>
+        <div class="gapnote"><strong>Offene Lücken:</strong> Kein direkt bestätigter kostenloser Volltext-Funktionsrahmen für EDC16, EDC17, MG1 oder MD1 in diesen beiden Runden. Für EDC16 sind konkrete Forenangebote belegt; EDC17 ist hier nur als Vorschau direkt bestätigt. Das ist kein Nachweis, dass weitere Dokumente weltweit nicht existieren.</div>
+      </div>
+    </section>
+    <footer>UNABHÄNGIGE QUELLENSAMMLUNG · KEINE OFFIZIELLE BOSCH-WEBSITE<br>Vor Verwendung immer Steuergerätefamilie, Projektkennung und Softwarestand abgleichen.</footer>
+  </main>
+<script>
+const data=[];
+function add(title,cat,kind,url,sub,meta,note,evidence,ok=false,round="2",featured=false){
+  data.push({title,cat,kind,url,sub,meta,note,evidence,ok,round,featured});
+}
+add("ME7.5 · Audi 1.8T","Benzin","pdf",
+  "https://files.s4wiki.com/docs/Audi_R4-5V_T_132kW_ME7.pdf",
+  "Funktionsrahmen · Audi R4-5V Turbo, Quereinbau, 132 kW",
+  ["DE","1.885 Seiten","≈ 21 MB","03.01.2001"],
+  "Priorität für die ursprüngliche ME7.5-Suche. Systemkennung und Projektname unterscheiden sich im Original; kein bloßer Dateinamensnachweis.",
+  "Runde 2: PDF-Inhalt abgerufen. Deckblatt: System SG ME7.5; Projekt Audi R4-5V T Quereinbau 132kW ME7.1; Projekt 5/4019.00;35; Programmstand 24bl. Ausgewählte Blöcke ABK, APP, FB, FDEF.",
+  true,"2",true);
+add("EDC15+ · P127-PEA","Diesel","pdf",
+  "https://almisoft.ru/files/funktionsrahmen/EDC15+%20Funktionsbeschreibung%20EDC15+%20P127-PEA.pdf",
+  "Bosch Funktionsbeschreibung · Y 281 S01 / 127 - PEA",
+  ["DE","26.07.2000","Direkt-PDF"],
+  "Direktzugriff funktioniert trotz 404 des übergeordneten Verzeichnisses. Enthält u. a. Mengenberechnung, Startmenge, Begrenzungsmenge und Leerlaufregler.",
+  "Runde 2: PDF-Inhalt und Inhaltsverzeichnis abgerufen. Dokumentkopf: RBOS/EDS3, Funktionsbeschreibung EDC15+ P127-PEA, 26. Juli 2000.",
+  true,"2",true);
+add("MED9.1 · TFSI","Benzin","pdf",
+  "https://files.s4wiki.com/docs/MED9.1%20TFSI.pdf",
+  "Funktionsrahmen · SG-MED9-1 · Projekt Ea827 TSI",
+  ["DE","4.860 Seiten","≈ 53 MB","20.08.2004"],
+  "Großer Funktionsrahmen für einen konkreten MED9.1-Projektstand. Nicht pauschal für jede MED9-Anwendung passend.",
+  "Runde 2: PDF-Kopf und Inhaltsverzeichnis abgerufen. Projektnummer 5-4420.01/41W038_PQ35;0; Programmstand 41W038_PQ35; ausgewählte Blöcke ABK, APP, FB, FDEF, FW.",
+  true);
+add("MED17.5 · EA888","Benzin","pdf",
+  "https://files.s4wiki.com/docs/EA888%202.0L%20ULEV%20MED17.5.pdf",
+  "Funktionsrahmen · EA888 2.0L ULEV",
+  ["DE","5.864 Seiten","≈ 57 MB","18.07.2007"],
+  "Das Dokument bezeichnet sich ausdrücklich als „Funktionsrahmen (in Bearbeitung)“. Keine pauschale Vollständigkeitszusage.",
+  "Runde 2: PDF-Inhalt abgerufen. Deckblatt: EA888 2.0L ULEV MED17.5; Projektnummer 5-4420.13/D175X56H_M08C0;2; ausgewählte Blöcke ABK, APP, FB, FDEF, FW.",
+  true);
+add("ME7.3.1H · Alfa","Benzin","pdf",
+  "https://files.s4wiki.com/docs/ME-7.3.1H-Alfa-2_0L-FunctionAndDataSheet.pdf",
+  "Function- and Data Sheet · Alfa 2.0l BTS",
+  ["EN","1.327 Seiten","≈ 15 MB","20.07.2000"],
+  "Englischsprachige Funktions- und Datenbeschreibung. Gut als ergänzende ME7-Referenz, aber kein ME7.5-spezifischer Ersatz.",
+  "Runde 2: PDF-Inhalt abgerufen. System SG ME7.3H; Projekt ME 7.3.1H Alfa 2.0l BTS; Projektcode 9/633.3;16; Programmstand 07E0.",
+  true);
+add("EDC17CP22 · Volvo","Diesel","pdf",
+  "https://dpfegr.ru/wp-content/uploads/2016/02/Funktionsrahmen-volvo-EDC17CP22-preview-.pdf",
+  "Vorschau · EDC17 · P_670 - P86A",
+  ["EN","VORSCHAU","18.06.2008"],
+  "Neu gefundener Direktlink. Vorschau, kein bestätigter Volltext! „2/5398“ im Kopf beschreibt die ursprüngliche Paginierung, nicht den nachgewiesenen Umfang dieser Datei. CP22/Volvo laut Dateiname.",
+  "Runde 2: PDF-Inhalt abgerufen. Kopf: EDC17 | 0281Y0327U | 2008-06-18 | Final; P_670 - P86A. Datei heißt ausdrücklich preview. Enthält einen Vertraulichkeitshinweis.",
+  true,"2",true);
+add("MS 4 Sport","Motorsport","pdf",
+  "https://www.bosch-motorsport.com/media/downloads/ecu_ms_4_sport_funktionsrahmen.pdf",
+  "Bosch Motorsport · Function sheet / Funktionsrahmen",
+  ["DE / EN","123 Seiten","24.09.2012","Bosch-Domain"],
+  "Herstellergehostetes Motorsport-Dokument. Kein Serien-ME-/EDC-Funktionsrahmen.",
+  "Runde 2: PDF direkt auf bosch-motorsport.com abgerufen. Kopf: ECU MS 4 Sport, 40CS0X36 (Clubsport Basis); zweisprachiges Inhaltsverzeichnis und Funktionsbeschreibungen.",
+  true);
+add("EDC15+ · Onlineansicht","Diesel","page",
+  "https://www.manualslib.de/manual/466827/Bosch-Edc15Plus.html",
+  "ManualsLib · Funktionsbeschreibung",
+  ["DE","720 Seiten laut Viewer","Dokumentseite"],
+  "Erreichbare Dokumentansicht mit Download-Bedienelement. Der separate PDF-Download ist nicht geprüft.",
+  "Runde 2: HTML-Seite abgerufen. Titel Bosch EDC15+ Funktionsbeschreibung; Viewer mit 720 Seiten. Kein geprüfter PDF-Direktdownload.",
+  true);
+add("S4Wiki · Dokumentarchiv","Gemischt","page",
+  "https://files.s4wiki.com/docs/",
+  "Öffentlich lesbares Downloadverzeichnis",
+  ["DE / EN","Verzeichnis"],
+  "Quelle der bestätigten ME7-, MED9- und MED17-PDFs. Andere dort sichtbare Dateien sind nicht automatisch mitgeprüft.",
+  "Runde 2: Verzeichnis abgerufen. Enthält die vier oben direkt geprüften Serien-Benziner-PDFs sowie ergänzende Unterlagen.",
+  true);
+add("EDC15 / EDC16 · NefMoto","Diesel","page",
+  "http://nefariousmotorsports.com/forum/index.php?action=printpage;topic=993.0",
+  "Lesbarer Forenbeitrag · konkrete Dokumentangebote",
+  ["DE-Dokumente","EN-Beitrag","Anhänge: Login"],
+  "Nennt EDC15+ P12-VG2 (4,17 MB), EDC15C B079.CC0 (4,70 MB) und EDC16 P_197_V10 RBOS-EDS2 (46,9 MB PDF / 11 MB RAR). Druckansicht ist kein Download.",
+  "Runde 1: Druckansicht erfolgreich gelesen; in Runde 2 erneut als Suchtreffer gefunden. Die Anhänge wurden nicht abgerufen. HTTP-Adresse aus der geprüften Quelle.",
+  true,"1");
+add("EDC17 / ME9.2 · MHH","Gemischt","page",
+  "https://mhhauto.com/Thread-DOWNLOAD-Funktionsrahmen-VAG-EDC15C-P-EDC16C-EDC17CP04-20-46-54-BMW-ME9-2",
+  "Sammelthread · EDC15C/P, EDC16C, EDC17CP04/20/46/54, BMW ME9.2",
+  ["Überwiegend DE","Forum","Download nicht bestätigt"],
+  "Seite erreichbar in Runde 1. Ein download.txt-Anhang mit 116 Bytes ist sichtbar. Weder dessen Ziel noch ein kostenloser Volltextdownload sind bestätigt.",
+  "Runde 1: Threadinhalt abgerufen. Dokumentangebot laut Threadtitel und Beitrag. Keine Bestätigung des Inhalts oder der Erreichbarkeit des externen Downloads.",
+  true,"1");
+add("Motronic M3.8 / M5.9","Benzin","page",
+  "https://files.s4wiki.com/docs/Motronic-3.8.x-5.9.x/",
+  "Ältere Systeme · Funktionsdaten und Bezeichner",
+  ["Verzeichnis","XLSX statt PDF"],
+  "Öffentlich lesbares Verzeichnis mit zwei Excel-Dateien und weiteren Unterverzeichnissen. Kein vollständiger PDF-Funktionsrahmen bestätigt.",
+  "Runde 1: Verzeichnis abgerufen. Function Datasheet mit ca. 873 KB und Descriptor database mit ca. 23 KB gelistet. Einzeldateien nicht inhaltlich geprüft.",
+  true,"1");
+
+add("ME7.5 · The07k","Benzin","pdf",
+  "https://the07k.wiki/upload/2/29/ME7.5-funktionssrahmen.pdf",
+  "Früherer Direktlink · nicht freigegeben",
+  ["HTTP 403","Zugriff gesperrt"],
+  "In Runde 2 erneut mit HTTP 403 abgewiesen. Stattdessen den direkt bestätigten Audi-ME7.5-Link nutzen.",
+  "Direkter Abrufversuch gescheitert. Keine Aussage, ob ein anderer Browser oder ein anderes Netzwerk Zugriff hätte.");
+add("ME7 · NefMoto, Seite 2","Benzin","page",
+  "http://nefariousmotorsports.com/forum/index.php?topic=400.15",
+  "Bosch ME7 Documentation – Funktionsrahmen",
+  ["Forum","Anhänge: Login"],
+  "Aus Runde 1 übernommen. Nicht in Runde 2 erneut direkt bestätigt; keine geprüften Anhangsdownloads.",
+  "Vorige Ergebnisliste nennt eine gelesene Diskussion. Für die streng geprüfte Linkauswahl dieser Bibliothek zurückgestellt.","","1");
+add("ME7 · NefMoto, Seite 3","Benzin","page",
+  "http://nefariousmotorsports.com/forum/index.php?topic=400.30",
+  "Fortsetzung des ME7-Dokumentationsthreads",
+  ["Forum","Suchtreffer"],
+  "In Runde 1 gefunden. Kein bestätigter freier Download.",
+  "Suchtreffer; kein hier dokumentierter erfolgreicher direkter Seitenabruf.",false,"1");
+add("ME7sw","Benzin","pdf",
+  "https://files.s4wiki.com/docs/ME7sw.pdf",
+  "Ergänzendes ME7-Dokument",
+  ["≈ 456 KB","Nur gelistet"],
+  "Im aktuellen S4Wiki-Verzeichnis vorhanden, aber PDF-Inhalt nicht direkt geprüft. Nicht als vollständiger FR bezeichnet.",
+  "Runde 2: Dateiname im Verzeichnis sichtbar; kein direkter Dateiinhaltsabruf.");
+add("ME7 · LC / NLS","Benzin","pdf",
+  "https://files.s4wiki.com/docs/ME7.x_LC_NLS_rev003.pdf",
+  "Spezielle Zusatzdokumentation",
+  ["≈ 2,6 MB","Kein vollständiger FR"],
+  "Im Verzeichnis gelistet. Kein Ersatz für den eigentlichen Bosch-Funktionsrahmen.",
+  "Runde 2: Verzeichnis bestätigt; einzelne PDF nicht direkt abgerufen.");
+add("Audi S4 · Motorunterlage","Benzin","pdf",
+  "https://files.s4wiki.com/docs/Audi_S4_engine_english.pdf",
+  "Ergänzende englischsprachige Motorunterlage",
+  ["EN","≈ 3,3 MB","Kein bestätigter FR"],
+  "In beiden Runden als ergänzende Unterlage geführt; Einzeldatei nicht direkt geprüft.",
+  "Runde 2: Verzeichniseintrag vorhanden; kein direkter PDF-Inhaltsabruf.");
+add("M3.8 / M5.9 · Funktionsdaten","Benzin","other",
+  "https://files.s4wiki.com/docs/Motronic-3.8.x-5.9.x/M38x%20M592%20Function%20Datasheet.xlsx",
+  "M38x M592 Function Datasheet",
+  ["XLSX","≈ 873 KB"],
+  "Kein PDF. Als Dateieintrag bestätigt, Inhalt und Einzelabruf nicht geprüft.",
+  "Runde 1: Im erfolgreich gelesenen Verzeichnis gelistet.",false,"1");
+add("M3.8 / M5.9 · Bezeichner","Benzin","other",
+  "https://files.s4wiki.com/docs/Motronic-3.8.x-5.9.x/M3xx%20M592%20Descriptor%20database.xlsx",
+  "M3xx M592 Descriptor database",
+  ["XLSX","≈ 23 KB"],
+  "Kein PDF. Ergänzende Bezeichnerdatenbank laut Dateiname.",
+  "Runde 1: Im erfolgreich gelesenen Verzeichnis gelistet; Einzelabruf nicht geprüft.",false,"1");
+add("ME7 · Übersetzte Module","Benzin","page",
+  "https://www.scribd.com/document/166690773/Translated-Funktionsrahmen-Modules-22-05-2012-pdf",
+  "Translated Funktionsrahmen Modules",
+  ["Scribd","Kostenfreiheit unbestätigt"],
+  "Einzelne übersetzte Module, kein bestätigter kompletter Funktionsrahmen.",
+  "Aus Runde 1 übernommen; weder direkter Seitenabruf noch kostenloser Download in Runde 2 bestätigt.",false,"1");
+add("ME7.1.1 · VAG","Benzin","page",
+  "https://ru.scribd.com/document/378098764/BOSCH-ME7-1-1-800-VAG-1033-pdf",
+  "Bosch ME7.1.1 800 VAG 1033",
+  ["Scribd","Suchtreffer"],
+  "Keine Bestätigung eines kostenlosen PDF-Downloads.",
+  "Runde 1: russischsprachiger Suchtreffer.",false,"1");
+add("EDC16 · Englisch / Forum","Diesel","page",
+  "https://www.ecuconnections.com/forum/viewtopic.php?t=29331",
+  "Software documentation EDC16 (English)",
+  ["EN","ECU Connections"],
+  "Der Suchauszug erwähnt bereits Schwierigkeiten beim Download. Nicht als funktionierender Download ausweisen.",
+  "In beiden Runden als Suchtreffer gefunden; kein erfolgreich geprüfter Download.");
+add("EDC16 · Englisch / Scribd","Diesel","page",
+  "https://www.scribd.com/document/477684098/EDC16-Func-English-pdf",
+  "EDC16 Func English PDF",
+  ["EN","Scribd"],
+  "Kostenloser Zugriff auf einen PDF-Volltext nicht bestätigt.",
+  "Runde 1: Fundstelle; Runde 2: gleiche Dokument-ID in russischer Scribd-Ansicht gefunden.");
+add("EDC16 · Scribd RU-Ansicht","Diesel","page",
+  "https://ru.scribd.com/document/477684098/EDC16-Func-English-pdf",
+  "Sprachvariante des vorherigen Scribd-Eintrags",
+  ["Duplikat / Sprachansicht","Suchtreffer"],
+  "Kein zusätzliches Dokument; gleiche ID 477684098. Nur zur vollständigen Nachvollziehbarkeit der gefundenen URLs.",
+  "Runde 2: russischsprachiger Suchtreffer.");
+add("EDC17CP22 · Scribd-Vorschau","Diesel","page",
+  "https://www.scribd.com/document/501503262/Funktionsrahmen-volvo-EDC17CP22-preview",
+  "Volvo EDC17CP22 Preview",
+  ["VORSCHAU","Scribd"],
+  "Stattdessen steht oben eine direkt abgerufene Vorschau bei DPFEGR zur Verfügung.",
+  "Runde 1: Fundstelle; hier kein Seitenabruf oder kostenloser Download bestätigt.",false,"1");
+add("MHH · download.txt","Gemischt","other",
+  "https://mhhauto.com/attachment.php?aid=145880",
+  "Anhang zum EDC17-/ME9.2-Sammelthread",
+  ["TXT","116 Bytes laut Thread"],
+  "Kein PDF! Weiterführender Downloadinhalt und Zugangsbedingungen unbekannt.",
+  "Runde 1: Link im gelesenen Thread sichtbar, Anhang selbst nicht abgerufen.",false,"1");
+add("WinOLS.ru · Katalog","Gemischt","page",
+  "https://winols.ru/funktionsrahmens/",
+  "Funktionsrahmens and documentation",
+  ["RU","DE / EN laut Beschreibung"],
+  "Katalog-Fundstelle; Kostenfreiheit und konkrete Downloadziele nicht bestätigt.",
+  "Runde 1: Suchtreffer.",false,"1");
+add("DPFEGR · Katalog","Gemischt","page",
+  "https://dpfegr.ru/funktionsrahmens/",
+  "Funktionsrahmens and documentation for damos",
+  ["RU","Katalog"],
+  "Die Katalogseite ist nicht direkt geprüft. Nur die separat aufgeführte EDC17-Vorschau wurde in Runde 2 abgerufen.",
+  "Runde 1: Suchtreffer; kein geprüfter Katalogzugriff.",false,"1");
+add("Almisoft · Verzeichnis","Gemischt","page",
+  "https://almisoft.ru/files/funktionsrahmen/",
+  "Übergeordneter Ordner des EDC15+-PDFs",
+  ["HTTP 404"],
+  "Verzeichnis nicht gefunden. Der konkrete EDC15+-PDF-Link funktioniert trotzdem und ist oben freigegeben.",
+  "Runde 1: Server meldete 404 Not Found.",false,"1");
+add("EDC15–17 · Tuningartikel","Diesel","page",
+  "https://caracaltech.com/articles/article/637c6d1a7569f8e42eab6dfd",
+  "Ergänzender Artikel · keine Original-Funktionsbeschreibung",
+  ["EN","Kein FR"],
+  "Nur als ergänzende Fundstelle aus Runde 1 archiviert.",
+  "Kein direkter Abruf in Runde 2; kein originaler Volltext-Funktionsrahmen bestätigt.",false,"1");
+add("MED17 · rusEFI-PDF-Treffer","Benzin","pdf",
+  "https://wiki.rusefi.com/OEM-Docs/Bosch/MED17-2.0TSI.pdf",
+  "Suchindex nennt EA888 2.0L ULEV MED17.5",
+  ["DE","Suchtreffer"],
+  "PDF-Ziel selbst nicht direkt geprüft. Sicherer Recherchebefund: die oben freigegebene S4Wiki-Datei wurde direkt gelesen.",
+  "Runde 2: PDF als Suchtreffer. Der separat getestete Bosch-Ordner liefert eine allgemeine Wiki-Startseite.");
+add("rusEFI · Bosch-Ordner","Gemischt","page",
+  "https://wiki.rusefi.com/OEM-Docs/Bosch/",
+  "Kein nutzbares Bosch-Dokumentverzeichnis im Abruf",
+  ["Falscher Zielinhalt"],
+  "Abruf lieferte die allgemeine rusEFI-Wiki-Startseite statt eines Bosch-Dokumentindex. Deshalb nicht als funktionierende Dokumentquelle freigegeben.",
+  "Runde 2: HTML-Abruf erfolgreich, erwarteter Inhalt nicht vorhanden.");
+add("Funktionsrahmen · Carmasters","Gemischt","page",
+  "https://carmasters.org/topic/10894-funktionsrahmen/",
+  "Russischsprachige Diskussion über ME7 und EDC16",
+  ["RU","Neu in Runde 2"],
+  "Suchauszug warnt, dass als EDC16 bezeichnete Unterlagen auch ME7.1-Auszüge sein können. Inhalt vor Verwendung abgleichen.",
+  "Runde 2: Suchtreffer; Seite und Anhänge nicht direkt geprüft.");
+add("EDC16 · Drive2-Fundstelle","Diesel","page",
+  "https://www.drive2.ru/l/9057142/",
+  "Russischer Beitrag mit Dokumenttiteln",
+  ["RU","Neu in Runde 2"],
+  "Suchauszug nennt Electronic Diesel Control EDC16, Introduction to Reprogramming EDC16 und P_197_V10 RBOS-EDS2. Kein Download bestätigt.",
+  "Runde 2: Suchtreffer; kein direkter Abruf.");
+add("EDC16 · Tuning Guide","Diesel","page",
+  "https://www.scribd.com/document/216099554/EDC16-Tuning-Guide",
+  "Tuning Guide and Maps Overview",
+  ["Scribd","Kein Original-FR bestätigt"],
+  "Ergänzender Suchtreffer; kein bestätigter kostenloser Download.",
+  "Runde 2: Suchtreffer.");
+add("EDC16 · Fundamental Function","Diesel","page",
+  "https://www.scribd.com/document/284711864/EDC-16-Fundamental-Function",
+  "Auszug / thematische Funktionsbeschreibung",
+  ["Scribd","Zuordnung ungeprüft"],
+  "Nicht als vollständigen EDC16-Funktionsrahmen behandeln. Suchtreffer verweist auf Abgastemperatur-Themen.",
+  "Runde 2: Suchtreffer; Dateiinhalt und korrekte Systemzuordnung nicht geprüft.");
+add("EDC16 · Ross-Tech-Diskussion","Diesel","page",
+  "https://forums.ross-tech.com/index.php?threads/4260/",
+  "Interpreting VCDS live data",
+  ["EN","Diskussion, kein FR"],
+  "Enthält laut Suchauszug einen Hinweis auf die Suche nach EDC16-Funktionsrahmen, keinen nachgewiesenen PDF-Download.",
+  "Runde 2: Suchtreffer.");
+add("EDC17 · Forschungsarbeit","Diesel","pdf",
+  "https://cseweb.ucsd.edu/~klevchen/diesel-sp17.pdf",
+  "An Analysis of Emission Defeat Devices in Modern Automobiles",
+  ["EN","Forschung, kein FR"],
+  "Akademische Arbeit mit Bezug auf Bosch EDC17. Keine Funktionsrahmenbeschreibung; nur ergänzender Fund.",
+  "Runde 2: direkter PDF-Suchtreffer, Datei nicht abgerufen.");
+const $=id=>document.getElementById(id);
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function filtered(){
+  const q=$("search").value.trim().toLocaleLowerCase("de");
+  return data.filter(d=>
+    ($("archive").checked||d.ok)&&
+    (!$("category").value||d.cat===$("category").value)&&
+    (!$("kind").value||d.kind===$("kind").value)&&
+    (!q||[d.title,d.cat,d.sub,d.meta.join(" "),d.note,d.evidence,d.url].join(" ").toLocaleLowerCase("de").includes(q)));
+}
+function render(){
+  const list=filtered(),active=list.filter(d=>d.ok).length;
+  $("resultCount").textContent=`${list.length} Einträge · ${active} geprüfte Ziele`;
+  $("cards").innerHTML=list.length?list.map(d=>{
+    const status=d.ok?(d.kind==="pdf"?"PDF ABGERUFEN":"SEITE ABGERUFEN"):"NICHT FREIGEGEBEN";
+    const button=d.ok?
+      `<a class="linkbtn ${d.kind==="pdf"?"primary":""}" href="${escapeHTML(d.url)}" target="_blank" rel="noopener noreferrer">${d.kind==="pdf"?"PDF öffnen ↗":"Geprüfte Seite öffnen ↗"}</a>`:
+      `<div class="disablednote">Nur Rechercheeintrag · kein aktiver Link</div>`;
+    return `<article class="${d.featured?"featured ":""}${!d.ok?"unconfirmed":""}">
+      <div class="cardtop"><span class="category">${escapeHTML(d.cat)}</span><span class="badge ${d.ok?"solid":""}">${status}</span></div>
+      <h3>${escapeHTML(d.title)}</h3>
+      <p class="subtitle">${escapeHTML(d.sub)}</p>
+      <div class="meta">${d.meta.map(m=>`<span>${escapeHTML(m)}</span>`).join("")}</div>
+      <p class="note">${escapeHTML(d.note)}</p>
+      <div class="bottom">${button}
+        <details><summary>Prüfbefund & Originaladresse</summary>
+          <p>${escapeHTML(d.evidence)}</p>
+          <p><strong>Dokumentierter Befund: Runde ${escapeHTML(d.round)}.</strong> Kein automatischer Live-Test beim Öffnen dieser Bibliothek.</p>
+          <span class="url">${escapeHTML(d.url)}</span>
+        </details>
+      </div>
+    </article>`;
+  }).join(""):`<div class="empty">Keine passenden Einträge. Filter zurücksetzen oder das Archiv einblenden.</div>`;
+}
+$("totalCount").textContent=data.length;
+$("pdfCount").textContent=data.filter(d=>d.ok&&d.kind==="pdf").length;
+$("pageCount").textContent=data.filter(d=>d.ok&&d.kind==="page").length;
+["search","category","kind","archive"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",()=>{
+  $("message").textContent="";$("copyFallback").hidden=true;render();
+}));
+$("reset").addEventListener("click",()=>{
+  $("search").value="";$("category").value="";$("kind").value="";$("archive").checked=false;
+  $("message").textContent="";$("copyFallback").hidden=true;render();
+});
+$("copy").addEventListener("click",async()=>{
+  const list=filtered().filter(d=>d.ok);
+  if(!list.length){$("message").textContent="Keine geprüften Ziele in dieser Auswahl.";return;}
+  const text=list.map(d=>`${d.title} — ${d.kind==="pdf"?"PDF abgerufen":"Seite abgerufen"} · Runde ${d.round}\n${d.url}`).join("\n\n");
+  try{
+    if(!navigator.clipboard)throw new Error("clipboard unavailable");
+    await navigator.clipboard.writeText(text);
+    $("message").textContent=`${list.length} geprüfte Adressen kopiert. Forenseiten sind keine bestätigten Anhangsdownloads.`;
+  }catch(e){
+    $("copyFallback").value=text;$("copyFallback").hidden=false;$("copyFallback").focus();$("copyFallback").select();
+    $("message").textContent="Automatisches Kopieren ist hier nicht verfügbar. Die markierte Liste bitte manuell kopieren.";
+  }
+});
+$("print").addEventListener("click",()=>window.print());
+render();
+</script>
+</body>
+</html>
